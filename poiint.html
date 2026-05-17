@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pointe</title>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body {
+font-family: Arial;
+background: linear-gradient(135deg,#eef2ff,#f8fafc);
+margin: 0;
+padding: 20px;
+}
+
+/* HEADER */
+.header {
+text-align: center;
+margin-bottom: 20px;
+animation: fadeDown 0.6s ease;
+}
+
+.header h1 {
+font-size: 42px;
+margin: 0;
+color: #4f46e5;
+}
+
+.header span {
+font-size: 14px;
+color: #666;
+}
+
+/* CARDS */
+.top {
+display: grid;
+grid-template-columns: repeat(4,1fr);
+gap: 12px;
+margin-bottom: 20px;
+}
+
+.card {
+background: white;
+padding: 15px;
+border-radius: 14px;
+text-align: center;
+box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+transition: 0.3s;
+}
+
+.card:hover {
+transform: translateY(-4px);
+}
+
+.card i {
+margin-bottom: 5px;
+color: #4f46e5;
+}
+
+.card input {
+width: 80%;
+padding: 8px;
+margin-top: 5px;
+}
+
+/* TABLE */
+table {
+width: 100%;
+border-collapse: collapse;
+background: white;
+border-radius: 14px;
+overflow: hidden;
+animation: fadeUp 0.5s ease;
+}
+
+th, td {
+padding: 12px;
+text-align: center;
+}
+
+th {
+background: #e5e7eb;
+}
+
+tr {
+transition: 0.2s;
+}
+
+tr:hover {
+background: #eef2ff;
+}
+
+.fade-row {
+animation: fadeIn 0.4s ease;
+}
+
+/* COLORS */
+.green { color: #16a34a; font-weight: bold; }
+.red { color: #dc2626; font-weight: bold; }
+
+/* BUTTONS */
+button {
+border: none;
+padding: 8px 12px;
+border-radius: 8px;
+cursor: pointer;
+transition: 0.2s;
+}
+
+.add {
+background: linear-gradient(45deg,#06b6d4,#4f46e5);
+color: white;
+}
+
+.add:hover {
+transform: scale(1.05);
+}
+
+.del {
+background: #ef4444;
+color: white;
+}
+
+.del:hover {
+transform: scale(1.1);
+}
+
+/* CONTROLS */
+.controls {
+text-align: right;
+margin-bottom: 10px;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+from {opacity:0; transform:translateY(10px);}
+to {opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeDown {
+from {opacity:0; transform:translateY(-20px);}
+to {opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeUp {
+from {opacity:0; transform:translateY(20px);}
+to {opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Pointe <span>by Moo</span></h1>
+</div>
+
+<div class="top">
+<div class="card">
+<i class="fa fa-pen"></i><br>
+S1 Average<br>
+<input type="number" id="s1">
+</div>
+
+<div class="card">
+<i class="fa fa-chart-line"></i><br>
+S2<br><div id="s2">0.00</div>
+</div>
+
+<div class="card">
+<i class="fa fa-calculator"></i><br>
+Year<br><div id="year">0.00</div>
+</div>
+
+<div class="card">
+<i class="fa fa-circle-check"></i><br>
+Status<br><div id="status">-</div>
+</div>
+</div>
+
+<div class="controls">
+<button class="add" onclick="addModule()">
+<i class="fa fa-plus"></i> Add Module
+</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Coef</th>
+<th><i class="fa fa-file"></i> Exam</th>
+<th><i class="fa fa-book"></i> TD</th>
+<th>Note</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+
+<script>
+function addModule(data = {}) {
+const tr = document.createElement("tr");
+tr.classList.add("fade-row");
+
+tr.innerHTML = &lt;td&gt;&lt;input class="name" value="${data.name||''}"></td>
+<td><input type="number" class="coef" value="${data.coef||''}"&gt;&lt;/td&gt; &lt;td&gt;&lt;input type="number" class="exam" value="${data.exam||''}"></td>
+<td><input type="number" class="td" value="${data.td||''}"&gt;&lt;/td&gt; &lt;td class="note"&gt;0.00&lt;/td&gt; &lt;td&gt;&lt;button class="del"&gt;&lt;i class="fa fa-trash"&gt;&lt;/i&gt;&lt;/button&gt;&lt;/td&gt;;
+
+document.getElementById("table").appendChild(tr);
+
+tr.querySelector(".del").onclick = () => {
+tr.remove();
+calculate();
+};
+
+tr.querySelectorAll("input").forEach(i =>
+i.addEventListener("input", calculate)
+);
+
+calculate();
+}
+
+function calculate() {
+let rows = document.querySelectorAll("#table tr");
+
+let total = 0, coefSum = 0;
+
+rows.forEach(r => {
+let exam = parseFloat(r.querySelector(".exam").value)||0;
+let td = parseFloat(r.querySelector(".td").value)||0;
+let coef = parseFloat(r.querySelector(".coef").value)||0;
+
+let note = exam0.6 + td0.4;
+
+let cell = r.querySelector(".note");
+cell.innerText = note.toFixed(2);
+cell.className = "note " + (note>=10?"green":"red");
+
+total += note*coef;
+coefSum += coef;
+});
+
+let s2 = coefSum ? total/coefSum : 0;
+let s1 = parseFloat(document.getElementById("s1").value);
+
+let year = (!isNaN(s1)) ? (s1+s2)/2 : s2;
+
+document.getElementById("s2").innerText = s2.toFixed(2);
+document.getElementById("year").innerText = year.toFixed(2);
+
+let status = document.getElementById("status");
+
+if(year>=10){
+status.innerHTML = '<span class="green"><i class="fa fa-check"></i> Admitted</span>';
+} else {
+status.innerHTML = '<span class="red"><i class="fa fa-xmark"></i> Retake</span>';
+}
+
+localStorage.setItem("modules", JSON.stringify(
+[...rows].map(r=>({
+name:r.querySelector(".name").value,
+exam:r.querySelector(".exam").value,
+td:r.querySelector(".td").value,
+coef:r.querySelector(".coef").value
+}))
+));
+
+localStorage.setItem("s1", isNaN(s1)?"":s1);
+}
+
+function load() {
+let data = JSON.parse(localStorage.getItem("modules"))||[];
+let s1 = localStorage.getItem("s1");
+
+if(s1) document.getElementById("s1").value = s1;
+
+if(data.length){
+data.forEach(addModule);
+} else addModule();
+}
+
+window.addEventListener("DOMContentLoaded", ()=>{
+document.getElementById("s1").addEventListener("input", calculate);
+load();
+});
+</script>
+
+</body>
+</html>
